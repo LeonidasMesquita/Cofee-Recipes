@@ -1,0 +1,35 @@
+@startuml ''
+
+class "RegisterUser" as RegisterUserComponent {
+    -formData: Object
+    +handleChange(e): void
+    +handleSubmit(e): Promise<void>
+}
+
+class "RegisterListCreateView" as RegisterView {
+    -queryset: QuerySet
+    -serializer_class: RegisterSerializer
+    +list(request): Response
+    +create(request): Response
+}
+
+class "RegisterSerializer" as RegisterSerializer {
+    -Meta: Meta
+    +create(validated_data): Register
+    +update(instance, validated_data): Register
+}
+
+class "Register" as RegisterModel {
+    -name: CharField
+    -email: EmailField
+    -user_name: CharField
+    -password: CharField
+    -confirm_password: CharField
+    +__str__(): str
+}
+
+RegisterUserComponent -- RegisterView : Makes HTTP POST request
+RegisterView --> RegisterSerializer : Uses
+RegisterSerializer --> RegisterModel : Serializes
+
+@enduml
